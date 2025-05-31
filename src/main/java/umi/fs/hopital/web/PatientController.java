@@ -26,12 +26,21 @@ public class PatientController {
     @GetMapping("/index")
     public String index(Model model,
                         @RequestParam(name = "page",defaultValue="0") int p,
-                        @RequestParam(name="size",defaultValue="4") int s) {
-        Page<Patient> pagePatients = pateintRepository.findAll(PageRequest.of(p,s));
+                        @RequestParam(name="size",defaultValue="4") int s,
+                        @RequestParam(name="keyword",defaultValue="") String kw) {
+
+        Page<Patient> pagePatients = pateintRepository.findByNomContains(kw,PageRequest.of(p,s));
+        //Page<Patient> pagePatients = pateintRepository.findAll(PageRequest.of(p,s));
         model.addAttribute("patientList",pagePatients.getContent());
         model.addAttribute("currentPages",p);
+        model.addAttribute("keyword",kw);
         //Avoir le nombre total des pages
         model.addAttribute("pages",new int[pagePatients.getTotalPages()]);
         return "patients";
+    }@GetMapping("/delete")
+    public String delete(Long id){
+        pateintRepository.deleteById(id);
+        return "redirect:/index";
     }
 }
+
