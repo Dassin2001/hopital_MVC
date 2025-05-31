@@ -5,23 +5,27 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import umi.fs.hopital.entities.Patient;
-import umi.fs.hopital.repository.PateintRepository;
+import umi.fs.hopital.repository.PatientRepository;
+import umi.fs.hopital.repository.UserRepository;
 
 import java.util.Date;
 
 @SpringBootApplication
 public class HopitalApplication implements CommandLineRunner {
     @Autowired
-    private PateintRepository pateintRepository;
+    private PatientRepository pateintRepository;
+    private UserRepository user1;
     public static void main(String[] args) {
         SpringApplication.run(HopitalApplication.class, args);
     }
     //teste
     @Override
     public void run(String... args) throws Exception {
-        pateintRepository.save(new Patient(null,"Imane",new Date(),false,34));
+        pateintRepository.save(new Patient(null,"Imane",new Date(),false,314));
         pateintRepository.save(new Patient(null,"Hanane",new Date(),false,4321));
-        pateintRepository.save(new Patient(null,"Mohamed",new Date(),true,21 ));
+        pateintRepository.save(new Patient(null,"Mohamed",new Date(),true,211 ));
+        //user1.save(new Patient(null,"Mohamed","passwd",true,211 ));
+
 
     }
 

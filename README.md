@@ -223,6 +223,38 @@ Toutes les fonctionnalités demandées ont été réalisées avec succès.
 Des améliorations ont également été apportées à l’ergonomie et à l’expérience utilisateur.
 
 ![illustration](images/ajouter_modifier.png)
+---
+
+
+
+
+
+
+
+## Partie 2  Gestion des Patients avec Spring Boot, Thymeleaf et Spring Data JPA
+
+## Objectif du Partie 2
+
+- Créer une page template
+- Faire la validation des formulaires
+
+
+### Créer une page template
+ Pour intégrer un système de templates réutilisables (layout) dans une application web utilisant Thymeleaf, il est nécessaire d'importer la dépendance correspondante, à savoir thymeleaf-layout-dialect, puis de l'ajouter dans le fichier de configuration pom.xml. Cette bibliothèque permet de définir une structure de page commune (en-tête, pied de page, menu, etc.) afin de favoriser la réutilisabilité et la cohérence de l’interface utilisateur.
+
+nous avons conçu une page modèle, communément appelée template, qui servira de structure de base pour toutes les autres pages de l’application. Ce template centralise les éléments communs tels que la mise en page, les styles, et la navigation, permettant ainsi une cohérence visuelle et fonctionnelle sur l’ensemble du site. L’utilisation d’un template favorise également la réutilisation du code, ce qui facilite la maintenance et les évolutions futures du projet. Pour intégrer ce template dans les différentes pages, nous appliquons un mécanisme d’héritage spécifique, mis en œuvre grâce au code suivant, qui permet aux pages filles de se baser sur cette structure commune tout en personnalisant leur contenu propre.
+   ![illustration](images/patientes_avec_template_Layout.png)
+
+
+### Faire la validation des formulaires
+
+Pour activer la validation, il est nécessaire d'importer les dépendances correspondantes à la validation dans Spring Boot.
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentification</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.5/css/bootstrap.min.css">
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-header text-white bg-primary text-center">
+                    <h4 class="mb-0">Authentification</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" th:action="@{/login}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Entrer votre nom d'utilisateur" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Entrer votre mot de passe" required>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="rememberMe" name="remember-me">
+                            <label class="form-check-label" for="rememberMe">
+                                Se souvenir de moi
+                            </label>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Se connecter</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
