@@ -1,6 +1,7 @@
 package umi.fs.hopital.web;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import umi.fs.hopital.entities.Patient;
@@ -23,9 +24,14 @@ import java.util.List;
 public class PatientController {
     private PateintRepository pateintRepository;
     @GetMapping("/index")
-    public String index(Model model) {
-        Page<Patient> pagePatients = pateintRepository.findAll(PageRequest.of(0,4));
+    public String index(Model model,
+                        @RequestParam(name = "page",defaultValue="0") int p,
+                        @RequestParam(name="size",defaultValue="4") int s) {
+        Page<Patient> pagePatients = pateintRepository.findAll(PageRequest.of(p,s));
         model.addAttribute("patientList",pagePatients.getContent());
+        model.addAttribute("currentPages",p);
+        //Avoir le nombre total des pages
+        model.addAttribute("pages",new int[pagePatients.getTotalPages()]);
         return "patients";
     }
 }
