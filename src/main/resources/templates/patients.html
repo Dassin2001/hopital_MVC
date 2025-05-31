@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>patients</title>
     <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css">
 </head>
 <body>
 <div class="p-3">
@@ -12,9 +13,13 @@
         <div class="card-body">
             <form method="get" th:action="@{/index}">
                 <label>keyword</label>
-                <input type="text"  name="keyword" th:value="${keyword}">
-                <button type="submit" class="btn btn-info">Chercher</button>
+                <input  type="text"  name="keyword" th:value="${keyword}">
+                <button type="submit" class="btn btn-info">
+                    <i class="bi bi-search"></i>
+                </button>
             </form>
+            <a class="btn btn-success mb-3" th:href="@{/formPatient}"><i class="bi bi-plus-circle"></i> Ajouter Patient</a>
+
             <table class="table">
                 <thead>
                 <tr>
@@ -33,9 +38,15 @@
                     <td th:text="${p.malade}"></td>
                     <td th:text="${p.score}"></td>
                     <td>
-                        <a onclick="return confirm('Voulez vous supprimer?')"
+                        <a onclick="javascript: return confirm('Voulez vous supprimer?')"
                            th:href="@{/delete(id=${p.id}, page=${currentPages}, keyword=${keyword})}"
-                           class="btn btn-danger">Supprimer</a>
+                           class="btn btn-danger">
+                             <i class="bi bi-trash"></i>
+                        </a>
+                        <a th:href="@{/editPatient(id=${p.id})}" class="btn btn-warning me-2">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+
                     </td>
                 </tr>
                 </tbody>
