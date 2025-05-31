@@ -41,7 +41,8 @@ public class PatientController {
         //Avoir le nombre total des pages
         model.addAttribute("pages",new int[pagePatients.getTotalPages()]);
         return "patients";
-    }@GetMapping("/delete")
+    }
+    @GetMapping("/delete")
     public String delete(Long id,int page,String keyword) {
         pateintRepository.deleteById(id);
         return "redirect:/index?page="+page+"&keyword="+keyword ;
