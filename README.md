@@ -226,12 +226,7 @@ Des améliorations ont également été apportées à l’ergonomie et à l’ex
 ---
 
 
-
-
-
-
-
-## Partie 2  Gestion des Patients avec Spring Boot, Thymeleaf et Spring Data JPA
+# Partie 2 
 
 ## Objectif du Partie 2
 
@@ -250,8 +245,56 @@ nous avons conçu une page modèle, communément appelée template, qui servira 
 
 Pour activer la validation, il est nécessaire d'importer les dépendances correspondantes à la validation dans Spring Boot.
 
+#### 1. Mise en place du système de template avec Thymeleaf Layout
+Nous avons commencé par créer un fichier template.html dans le dossier templates. Ce fichier sert de base à toutes les autres pages (structure commune).
 
 
+Exemple d’utilisation du layout dans patients.html :
+
+Ce système nous permet d'éviter la répétition de code HTML commun sur toutes les pages.
+
+#### 2. Validation des formulaires avec Spring Validation 
+Nous avons ajouté des annotations de validation à l'entité Patient pour contrôler les champs saisis :
+
+Contrôleur : gestion de la validation
+Dans le contrôleur PatientController, on a utilisé @Valid et BindingResult :
+
+
+Affichage des messages d’erreur dans formPatient.html
+Dans le formulaire, chaque champ affiche les erreurs associées :
+
+
+Résultat final
+- Grâce à cette deuxième partie, l’application devient :
+- Plus structurée grâce aux templates.
+- Plus professionnelle avec une validation sécurisée des données.
+- Plus maintenable à long terme.
+
+
+---
+
+---
+
+Conclusion
+Cette deuxième partie améliore l’aspect ergonomique et robuste de l'application.
+La mise en place de templates évite la duplication de code, tandis que la validation des données garantit la cohérence des informations saisies.
+
+
+
+
+# Partie 3 : Sécurité avec Spring security  : 
+   
+Spring Security faciliter:
+on ajout dabord les dependances de security
+```
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+```
+- InMemomy Authentication:  https://www.youtube.com/watch?v=7VqpC8UD1zM
+- JDBC Authentication : https://www.youtube.com/watch?v=Haz3wLiQ5-0
+- UserDetails Service : https://www.youtube.com/watch?v=RTiS9ygyYs4
 
 
 

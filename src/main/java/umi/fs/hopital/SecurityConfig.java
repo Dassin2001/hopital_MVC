@@ -16,7 +16,7 @@ public class SecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(PasswordEncoder passwordEncoder) {
-        String encodedPassword = passwordEncoder.encode("SDIA");
+        String encodedPassword = passwordEncoder.encode("MSDIA");
         System.out.println(encodedPassword);
         return new InMemoryUserDetailsManager(
                 org.springframework.security.core.userdetails.User.withUsername("user1").password(encodedPassword).roles("USER").build(),
