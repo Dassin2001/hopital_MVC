@@ -283,7 +283,10 @@ La mise en place de templates évite la duplication de code, tandis que la valid
 
 
 # Partie 3 : Sécurité avec Spring security  : 
-   
+Dans cette partie, nous avons mis en place la sécurité de notre application web en utilisant Spring Security, un framework robuste et flexible de sécurisation des applications Java EE. L’objectif était de :
+Protéger les routes sensibles selon les rôles des utilisateurs,
+Implémenter une authentification en mémoire, via JDBC, et avec UserDetailsService,
+Gérer l'encodage des mots de passe et la restriction d'accès aux différentes fonctionnalités selon les privilèges.  
 Spring Security faciliter:
 on ajout dabord les dependances de security
 ```
@@ -292,15 +295,123 @@ on ajout dabord les dependances de security
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 ```
-- InMemomy Authentication:  https://www.youtube.com/watch?v=7VqpC8UD1zM
-- JDBC Authentication : https://www.youtube.com/watch?v=Haz3wLiQ5-0
-- UserDetails Service : https://www.youtube.com/watch?v=RTiS9ygyYs4
+#### InMemomy Authentication:  https://www.youtube.com/watch?v=7VqpC8UD1zM
 
 
 
+Authentification en mémoire (InMemory Authentication)
+Cette approche a été utilisée pour tester rapidement le système d’authentification sans passer par une base de données.
+
+Nous avons défini une méthode inMemoryUserDetailsManager qui crée des utilisateurs statiques avec rôles :
+```
+@Bean
+public InMemoryUserDetailsManager inMemoryUserDetailsManager(PasswordEncoder passwordEncoder) {
+    String encodedPassword = passwordEncoder.encode("AAMER");
+    return new InMemoryUserDetailsManager(
+        User.withUsername("user1").password(encodedPassword).roles("USER").build(),
+        User.withUsername("user2").password(encodedPassword).roles("USER").build(),
+        User.withUsername("admin").password(encodedPassword).roles("USER", "ADMIN").build()
+    );
+}
+
+```
+Cette méthode a permis de vérifier rapidement les protections sur les endpoints /admin/** et /user/**.
 
 
+#### JDBC Authentication : https://www.youtube.com/watch?v=Haz3wLiQ5-0
 
+Authentification avec JDBC (JdbcUserDetailsManager)
+Nous avons intégré une méthode pour l’authentification avec JDBC, utilisant les utilisateurs stockés dans une base de données relationnelle :
+
+```
+@Bean
+public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){
+    return new JdbcUserDetailsManager(dataSource);
+}
+
+```
+Cette étape permet de connecter Spring Security à des tables d'utilisateurs et rôles personnalisées.
+
+
+#### UserDetails Service : https://www.youtube.com/watch?v=RTiS9ygyYs4
+
+
+UserDetailsService personnalisé
+Nous avons également utilisé un service personnalisé UserDetailServiceImpl basé sur UserDetailsService. Ce service permet de charger dynamiquement les utilisateurs depuis notre propre entité AppUser, et leurs rôles associés AppRole :
+
+``` 
+@Override
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    AppUser appUser = accountService.loadUserByUsername(username);
+    if (appUser == null) throw new UsernameNotFoundException("Username not found");
+    String[] roles = appUser.getRoles().stream().map(AppRole::getRole).toArray(String[]::new);
+    return User.withUsername(appUser.getUsername())
+               .password(appUser.getPassword())
+               .roles(roles)
+               .build();
+}
+
+```
+
+##### Gestion des rôles et utilisateurs
+Dans le service AccountServiceImpl, nous avons mis en place toutes les opérations nécessaires pour la gestion des comptes :
+- Création d’utilisateurs (addNewUser)
+- Ajout de rôles (addNewRole)
+- Association ou suppression de rôles à un utilisateur (addRoleToUser, removeRoleFromUser)
+- Ce service utilise le pattern @Transactional, ce qui permet d’assurer la cohérence des opérations sur la base de données.
+
+##### Sécurisation des routes avec @PreAuthorize et SecurityFilterChain
+Le fichier SecurityConfig contient la configuration centrale :
+
+Définition des règles d'accès via les rôles :
+```
+.requestMatchers("/deletePatient/**", "/admin/**").hasRole("ADMIN")
+.requestMatchers("/user/**").hasRole("USER")
+```
+Redirections personnalisées pour login, logout, et accès refusé :
+```
+.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/index", true).failureUrl("/login?error=true").permitAll())
+.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll())
+.exceptionHandling(eh -> eh.accessDeniedPage("/error"))
+
+```
+```
+.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/index", true).failureUrl("/login?error=true").permitAll())
+.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll())
+.exceptionHandling(eh -> eh.accessDeniedPage("/error"))
+```
+
+De plus, les méthodes critiques du PatientController sont protégées avec @PreAuthorize, comme :
+``` 
+@PreAuthorize("hasRole('RPLE_ADMIN')")
+public String deletePatient(...)
+
+```
+##### Encodage des mots de passe
+Nous utilisons l'encodeur recommandé par Spring Security : BCryptPasswordEncoder, via ce bean
+``` 
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+
+```
+### Conclusion
+
+Ce projet met en évidence la réalisation d’une application web complète basée sur Spring Boot, intégrant la gestion des utilisateurs, la sécurisation des accès, et la personnalisation du service d’authentification via une implémentation dédiée de UserDetailsService.
+À travers les différentes étapes du développement, nous avons :
+
+- Créé une entité User robuste, enrichie par des validations via les annotations Jakarta Validation.
+
+- Développé un service personnalisé UserDetailServiceImpl permettant de charger dynamiquement les utilisateurs depuis une base de données, offrant ainsi une solution flexible et extensible.
+
+- Intégré ce service au cœur du système de sécurité Spring Security, en remplaçant les approches standard par une authentification sur mesure adaptée aux besoins réels de l’application.
+
+- Appliqué une gestion des rôles pour restreindre l’accès aux ressources de manière fine et sécurisée.
+
+- Exploité les bonnes pratiques de développement Spring Boot : injection de dépendances, architecture modulaire, séparation claire des responsabilités et utilisation efficace de Lombok.
+
+- Ainsi, ce projet illustre parfaitement comment construire une application sécurisée, scalable et maintenable en s'appuyant sur les fonctionnalités avancées de l’écosystème Spring.
 ## Réalisé par
 
 **Aamer Fadma**  

@@ -3,6 +3,7 @@ package umi.fs.hopital.web;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class PatientController {
     }
 
     @GetMapping("/admin/deletePatient")
+    @PreAuthorize("hasRole('RPLE_ADMIN')")
     public String deletePatient(@RequestParam(name = "id") Long id, String keyword,
                                 int page,
                                 RedirectAttributes redirectAttributes) {
@@ -43,11 +45,13 @@ public class PatientController {
         redirectAttributes.addAttribute("keyword", keyword);
         redirectAttributes.addAttribute("successMessage", "Patient supprimé avec succès !");
         //return "redirect:/user/index?page="+page+"&keyword="+keyword;
-        return "redirect:/user/index";
+        return "redirect:/user/index?page=" + page + "&keyword=" + keyword;
 
     }
 
     @GetMapping("/admin/formPatient")
+    @PreAuthorize("hasRole('RPLE_ADMIN')")
+
     public String formPatient(Model model) {
         model.addAttribute("patient", new Patient());
         model.addAttribute("editMode", false);
@@ -55,6 +59,8 @@ public class PatientController {
     }
 
     @PostMapping("/admin/savePatient")
+    @PreAuthorize("hasRole('RPLE_ADMIN')")
+
     public String savePatient(@Valid @ModelAttribute Patient patient,
                               BindingResult bindingResult,
                               Model model,
@@ -71,6 +77,8 @@ public class PatientController {
     }
 
     @GetMapping("/admin/editPatient")
+    @PreAuthorize("hasRole('RPLE_ADMIN')")
+
     public String editPatient(Model model,
                               @RequestParam(name = "id")Long id,
                               RedirectAttributes redirectAttributes,
@@ -100,7 +108,7 @@ public class PatientController {
         redirectAttributes.addAttribute("keyword", keyword);
 
         redirectAttributes.addFlashAttribute("successMessage", "Patient modifié avec succès !");
-        return "redirect:/user/index";
+        return "redirect:/user/index?page=" + page + "&keyword=" + keyword;
     }
 
     @GetMapping("/patientDetails")
