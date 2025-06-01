@@ -30,7 +30,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="p : ${ListPatients}">
+                    <tr th:each="p : ${listPatients}">
                         <td th:text="${p.id}"></td>
                         <td th:text="${p.nom}"></td>
                         <td th:text="${p.dateNaissance}"></td>
@@ -38,7 +38,7 @@
                         <td th:text="${p.score}"></td>
                         <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                             <a onclick="return confirm('Êtes-vous sûr ?')"
-                               th:href="@{/admin/delete(id=${p.id}, keyword=${keyword}, page=${currentPage})}"
+                               th:href="@{/admin/deletePatient(id=${p.id}, keyword=${keyword}, page=${currentPage})}"
                                class="btn btn-danger">
                                 <i class="bi bi-trash"></i>
                             </a>
